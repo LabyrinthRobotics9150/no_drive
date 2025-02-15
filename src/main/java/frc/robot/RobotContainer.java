@@ -63,13 +63,17 @@ public class RobotContainer {
 
     // X Button - down button
     m_driverController.x()
-    .whileTrue(DownElevatorCommand.downElevator(m_elevator, 0.01));
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.01));
 
     /* PIVOT CONTROLS */
     
-    // Y Button - manual pivot raise
+    // Left Trigger - manual pivot raise
     m_driverController.leftTrigger()
-    .whileTrue(MovePivotManualCommand.movePivot(m_intake, .01));
+    .whileTrue(MovePivotManualCommand.movePivot(m_intake, .05));
+
+    // Right Trigger - manual pivot lower
+    m_driverController.rightTrigger()
+    .whileTrue(MovePivotManualCommand.movePivot(m_intake, -.05));
   }
 
   /**

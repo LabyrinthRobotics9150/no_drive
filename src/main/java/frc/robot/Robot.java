@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -91,6 +92,10 @@ public class Robot extends TimedRobot {
       System.out.println("reverselimitswitch pressed");
     }
     */
+
+    System.out.println(IntakeSubsystem.IntakePivotMotor.getAbsoluteEncoder().getPosition());
+
+
   }
 
   @Override

@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -14,23 +16,30 @@ public class IntakeSubsystem extends SubsystemBase  {
         public static final SparkFlex IntakeWheelsMotor = new SparkFlex(Constants.OperatorConstants.kIntakeWheelsCanId, MotorType.kBrushless);
         private final PIDController pidController = new PIDController(0.1, 0, 0);
 
-        SparkAbsoluteEncoder intakePivotEncoder = IntakePivotMotor.getAbsoluteEncoder();
-        private int MAX_POSITION;
-        private int MIN_POSITION;
+        AbsoluteEncoder intakePivotEncoder = IntakePivotMotor.getAbsoluteEncoder();
+        // home - 0.9278091788291931
+        // ball - 0.5219756960868835
+        private double HOME_POSITION = 0.0;
+        private double BALL_POSITION = 0.571;
         private double holdPosition; 
+
+        public IntakeSubsystem() {
+            setHeight(HOME_POSITION);
+        }
 
         // pivot motor
         public void setPivotSpeed(double speed) {
             if (true /*  MAX_POSITION || MIN_POSITION */) {
                 IntakePivotMotor.set(speed);
             } else {
-                IntakePivotMotor.set(speed);
+                killPivot();;
             }
         }
     
         public void stopPivot() {
             IntakePivotMotor.set(0);
             holdPosition = getHeight();
+            holdPosition();
         }
     
         public double getHeight() {
@@ -41,6 +50,7 @@ public class IntakeSubsystem extends SubsystemBase  {
             double output = pidController.calculate(getHeight(), targetHeight);
             IntakePivotMotor.set(output);
             holdPosition = targetHeight; 
+            holdPosition();
         }
     
         public void holdPosition() {
