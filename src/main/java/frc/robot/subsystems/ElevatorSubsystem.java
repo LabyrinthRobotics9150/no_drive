@@ -9,7 +9,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private final SparkFlex elevatorMotor = new SparkFlex(5, MotorType.kBrushless); 
+    private final SparkFlex elevatorMotor = new SparkFlex(4, MotorType.kBrushless); 
     private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder(); //new Encoder(0, 1); 
     private final PIDController pidController = new PIDController(0.1, 0, 0); 
     private double holdPosition = 0.0; 

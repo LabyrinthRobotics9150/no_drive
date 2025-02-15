@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DownElevatorCommand;
 import frc.robot.commands.KillElevatorCommand;
 import frc.robot.commands.MoveElevatorCommand;
 import frc.robot.commands.MoveElevatorManualCommand;
@@ -56,6 +57,10 @@ public class RobotContainer {
     // A Button - ohcrap button
     m_driverController.a()
         .onTrue(new KillElevatorCommand(m_elevator)); 
+
+    // X Button - down button
+    m_driverController.x()
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
   }
 
   /**
