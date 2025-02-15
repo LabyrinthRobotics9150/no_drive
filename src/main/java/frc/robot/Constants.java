@@ -15,5 +15,31 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+
+        // SPARK MAX CAN IDs
+        // intake
+        public static final int kIntakePivotCanId = 1;
+        public static final int kIntakeWheelsCanId = 2;
+
+        // funnel pivot
+        public static final int kFunnelPivotCanId = 3;
+        
+        // elevator
+        public static final int kElevatorFollowerCanId = 4;
+        public static final int kElevatorLeaderCanId = 5;
+
+        // drive
+        /*        public static final int kFrontLeftDrivingCanId = 1;
+        public static final int kRearLeftDrivingCanId = 4;
+        public static final int kFrontRightDrivingCanId = 2;
+        public static final int kRearRightDrivingCanId = 3;
+    
+        public static final int kFrontLeftTurningCanId = 5;
+        public static final int kRearLeftTurningCanId = 8;
+        public static final int kFrontRightTurningCanId = 6;
+        public static final int kRearRightTurningCanId = 7;
+    
+        public static final int kElevatorTestId = 11;
+         */
   }
 }

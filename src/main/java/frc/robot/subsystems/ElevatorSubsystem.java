@@ -1,18 +1,20 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax; // Or use SparkMax if using CAN
-import edu.wpi.first.wpilibj.Encoder;
+
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private final PWMSparkMax elevatorMotor = new PWMSparkMax(5); 
-    private final Encoder elevatorEncoder = new Encoder(0, 1); 
+    private final SparkFlex elevatorMotor = new SparkFlex(5, MotorType.kBrushless); 
+    private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder(); //new Encoder(0, 1); 
     private final PIDController pidController = new PIDController(0.1, 0, 0); 
     private double holdPosition = 0.0; 
 
     public ElevatorSubsystem() {
-        elevatorEncoder.setDistancePerPulse(0.01); 
     }
 
     public void setElevatorSpeed(double speed) {
@@ -26,7 +28,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public double getHeight() {
-        return elevatorEncoder.getDistance();
+        return elevatorEncoder.getPosition();
     }
 
     public void setHeight(double targetHeight) {

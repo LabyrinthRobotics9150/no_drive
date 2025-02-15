@@ -51,7 +51,7 @@ public class RobotContainer {
 
     // Y Button - manual raise
     m_driverController.y()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.5));
+        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
 
     // A Button - ohcrap button
     m_driverController.a()
