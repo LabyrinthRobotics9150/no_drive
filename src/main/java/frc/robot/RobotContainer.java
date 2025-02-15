@@ -5,11 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DownElevatorCommand;
-import frc.robot.commands.KillElevatorCommand;
-import frc.robot.commands.MoveElevatorCommand;
-import frc.robot.commands.MoveElevatorManualCommand;
+import frc.robot.commands.Elevator.*;
+import frc.robot.commands.Intake.MovePivotManualCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -22,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
     private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
+    private final IntakeSubsystem m_intake = new IntakeSubsystem();
 
 
 
@@ -46,13 +46,16 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+
+    /* ELEVATOR CONTROLS */
+
     // B Button - move to preset and hold, return to origin when released
     m_driverController.b()
     .whileTrue(new MoveElevatorCommand(m_elevator, 50.0));
 
     // Y Button - manual raise
     m_driverController.y()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
+        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.01));
 
     // A Button - ohcrap button
     m_driverController.a()
@@ -60,7 +63,13 @@ public class RobotContainer {
 
     // X Button - down button
     m_driverController.x()
-    .whileTrue(DownElevatorCommand.moveElevator(m_elevator, 0.01));
+    .whileTrue(DownElevatorCommand.downElevator(m_elevator, 0.01));
+
+    /* PIVOT CONTROLS */
+    
+    // Y Button - manual pivot raise
+    m_driverController.leftTrigger()
+    .whileTrue(MovePivotManualCommand.movePivot(m_intake, .01));
   }
 
   /**
