@@ -1,30 +1,40 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
-    private final SparkFlex elevatorMotor = new SparkFlex(4, MotorType.kBrushless); 
+    public static final SparkFlex elevatorMotor = new SparkFlex(Constants.OperatorConstants.kElevatorLeaderCanId, MotorType.kBrushless); 
     private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder(); //new Encoder(0, 1); 
-    private final PIDController pidController = new PIDController(0.1, 0, 0); 
+    private final PIDController pidController = new PIDController(0.1, 0, 0);
+    public static final SparkLimitSwitch forwardlimitswitch = elevatorMotor.getForwardLimitSwitch();
+    public static final SparkLimitSwitch reverselimitswitch = elevatorMotor.getReverseLimitSwitch();
     private double holdPosition = 0.0; 
 
     public ElevatorSubsystem() {
     }
 
     public void setElevatorSpeed(double speed) {
-        elevatorMotor.set(speed);
-        holdPosition = getHeight();
+        if (ElevatorSubsystem.forwardlimitswitch.isPressed() || 
+        ElevatorSubsystem.reverselimitswitch.isPressed() ) {
+            elevatorEncoder.setPosition(0);
+            stopElevator();
+        } else {
+            elevatorMotor.set(speed);
+            holdPosition = getHeight();
+        }
     }
 
     public void stopElevator() {
         elevatorMotor.set(0);
-        holdPosition = getHeight(); // Update hold position when stopped
+        holdPosition = getHeight();
     }
 
     public double getHeight() {
@@ -34,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void setHeight(double targetHeight) {
         double output = pidController.calculate(getHeight(), targetHeight);
         elevatorMotor.set(output);
-        holdPosition = targetHeight; // Set hold position to target
+        holdPosition = targetHeight; 
     }
 
     public void holdPosition() {

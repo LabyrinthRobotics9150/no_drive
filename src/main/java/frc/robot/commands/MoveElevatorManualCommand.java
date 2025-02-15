@@ -8,7 +8,12 @@ public class MoveElevatorManualCommand {
         return new Command() {
             @Override
             public void execute() {
-                elevator.setElevatorSpeed(speed); // Move at the given speed
+                if (ElevatorSubsystem.forwardlimitswitch.isPressed() || 
+                ElevatorSubsystem.reverselimitswitch.isPressed() ) {
+                    end(true);
+                } else {
+                    elevator.setElevatorSpeed(speed); // Move at the given speed
+                }
             }
 
             @Override

@@ -60,7 +60,7 @@ public class RobotContainer {
 
     // X Button - down button
     m_driverController.x()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
+    .whileTrue(DownElevatorCommand.moveElevator(m_elevator, 0.01));
   }
 
   /**
