@@ -5,10 +5,10 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.KillElevatorCommand;
 import frc.robot.commands.MoveElevatorCommand;
 import frc.robot.commands.MoveElevatorManualCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -44,13 +44,18 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // B Button - Move elevator to a specific height
-    m_driverController.b()
-        .onTrue(MoveElevatorCommand.moveToHeight(m_elevator, 50.0)); // Move to 50 units when B is pressed
 
-    // Y Button - Raise elevator while held
+    // B Button - move to preset and hold, return to origin when released
+    m_driverController.b()
+    .whileTrue(new MoveElevatorCommand(m_elevator, 50.0));
+
+    // Y Button - manual raise
     m_driverController.y()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.5)); // Moves up at 50% speed
+        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.5));
+
+    // A Button - ohcrap button
+    m_driverController.a()
+        .onTrue(new KillElevatorCommand(m_elevator)); 
   }
 
   /**
