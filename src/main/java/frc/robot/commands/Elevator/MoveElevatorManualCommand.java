@@ -12,13 +12,13 @@ public class MoveElevatorManualCommand {
                 ElevatorSubsystem.reverselimitswitch.isPressed() ) {
                     end(true);
                 } else {
-                    elevator.setElevatorSpeed(speed); // Move at the given speed
+                    elevator.setElevatorSpeed(speed); 
                 }
             }
 
             @Override
             public void end(boolean interrupted) {
-                elevator.stopElevator(); // Stop when button is released
+                elevator.stopElevator(); 
             }
         };
     }

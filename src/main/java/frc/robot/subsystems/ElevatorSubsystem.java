@@ -12,7 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class ElevatorSubsystem extends SubsystemBase {
     public static final SparkFlex elevatorMotor = new SparkFlex(Constants.OperatorConstants.kElevatorLeaderCanId, MotorType.kBrushless); 
-    private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder(); //new Encoder(0, 1); 
+    private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
     private final PIDController pidController = new PIDController(0.1, 0, 0);
     public static final SparkLimitSwitch forwardlimitswitch = elevatorMotor.getForwardLimitSwitch();
     public static final SparkLimitSwitch reverselimitswitch = elevatorMotor.getReverseLimitSwitch();
@@ -22,8 +22,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setElevatorSpeed(double speed) {
-        if (ElevatorSubsystem.forwardlimitswitch.isPressed() || 
-        ElevatorSubsystem.reverselimitswitch.isPressed() ) {
+        if ( (ElevatorSubsystem.forwardlimitswitch.isPressed() && speed > 0) || 
+        (ElevatorSubsystem.reverselimitswitch.isPressed() && speed < 0) ) {
             elevatorEncoder.setPosition(0);
             stopElevator();
         } else {
