@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
     }
     */
 
-    System.out.println(IntakeSubsystem.IntakePivotMotor.getAbsoluteEncoder().getPosition());
+    //System.out.println(IntakeSubsystem.IntakePivotMotor.getAbsoluteEncoder().getPosition());
 
 
   }
