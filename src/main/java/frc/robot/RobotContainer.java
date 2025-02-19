@@ -30,8 +30,11 @@ public class RobotContainer {
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController m_primaryController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    
+  private final CommandXboxController m_secondaryController = 
+    new CommandXboxController(OperatorConstants.kSecondaryControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -53,42 +56,77 @@ public class RobotContainer {
 
     /* ELEVATOR CONTROLS */
 
+    /* PRIMARY */
+
+    // Left Trigger - slow mode
+
+    // Right Trigger - Score coral
+
+    // Rb - Auto-align to right coral spoke
+
+    // Lb - Auto-align to left coral spoke
+
+    // 3 lines - resets gyro
+
+
+    /* SECONDARY */
+
+    // elevator heights
+
+    // A - Level 4
+
+    // B - Level 3
+
+    // C - Level 2
+
+    // D - Level 1
+
+    
+    // RT - intake in
+
+    // B - Ball command
+
+
     // B Button - move to preset and hold, return to origin when released
-    m_driverController.b()
+    m_primaryController.b()
     .whileTrue(new MoveElevatorCommand(m_elevator, 50.0));
 
     // Y Button - manual raise
-    m_driverController.y()
+    m_primaryController.y()
         .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.01));
 
     // A Button - ohcrap button
-    m_driverController.a()
+    m_primaryController.a()
         .onTrue(new KillElevatorCommand(m_elevator)); 
 
     // X Button - down button
-    m_driverController.x()
+    m_primaryController.x()
     .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.01));
 
     /* PIVOT CONTROLS */
     
     // Left Trigger - manual pivot raise
-    m_driverController.leftTrigger()
+    m_primaryController.leftTrigger()
     .whileTrue(MovePivotManualCommand.movePivot(m_intake, .05));
 
     // Right Trigger - manual pivot lower
-    m_driverController.rightTrigger()
+    m_primaryController.rightTrigger()
     .whileTrue(MovePivotManualCommand.movePivot(m_intake, -.05));
 
     // Left Bumper - Moves pivot arm to BALL position while held, returns to HOME when released
-    m_driverController.leftBumper()
+    m_primaryController.leftBumper()
     .whileTrue(new BallCommand(m_intake));
 
 
     /* Autoalign?!?!? */
       new Trigger(limelight::hasTarget)
-          .and(m_driverController.rightBumper())
+          .and(m_primaryController.rightBumper())
           .whileTrue(new AprilTagAlignCommand(/*drivetrain,*/ limelight));
-  }  }
+
+  }  
+  
+  
+}
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
