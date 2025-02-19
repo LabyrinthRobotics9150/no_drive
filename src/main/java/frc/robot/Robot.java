@@ -92,7 +92,10 @@ public class Robot extends TimedRobot {
       System.out.println("reverselimitswitch pressed");
     }
     */
-    System.out.println(IntakeSubsystem.IntakePivotMotor.getAbsoluteEncoder().getPosition());
+
+    //System.out.println(IntakeSubsystem.IntakePivotMotor.getAbsoluteEncoder().getPosition());
+
+
   }
 
   @Override

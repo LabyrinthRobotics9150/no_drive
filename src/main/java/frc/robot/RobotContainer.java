@@ -57,7 +57,7 @@ public class RobotContainer {
 
     // Y Button - manual raise
     m_driverController.y()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.01));
+        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
 
     // A Button - ohcrap button
     m_driverController.a()
@@ -65,7 +65,7 @@ public class RobotContainer {
 
     // X Button - down button
     m_driverController.x()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.01));
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.1));
 
     /* PIVOT CONTROLS */
     
