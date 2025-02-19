@@ -6,7 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Elevator.*;
+import frc.robot.commands.Intake.BallCommand;
 import frc.robot.commands.Intake.MovePivotManualCommand;
+import frc.robot.commands.Limelight.AutoLockToAprilTag;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -74,6 +76,14 @@ public class RobotContainer {
     // Right Trigger - manual pivot lower
     m_driverController.rightTrigger()
     .whileTrue(MovePivotManualCommand.movePivot(m_intake, -.05));
+
+    // Left Bumper - Moves pivot arm to BALL position while held, returns to HOME when released
+    m_driverController.leftBumper()
+    .whileTrue(new BallCommand(m_intake));
+
+
+    /* Autoalign?!?!? */
+    m_driverController.rightBumper().whileTrue(new AutoLockToAprilTag(swerveDrive, limelight));
   }
 
   /**
