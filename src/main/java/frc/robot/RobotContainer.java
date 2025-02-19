@@ -8,9 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Elevator.*;
 import frc.robot.commands.Intake.BallCommand;
 import frc.robot.commands.Intake.MovePivotManualCommand;
-import frc.robot.commands.Limelight.AutoLockToAprilTag;
+import frc.robot.commands.Limelight.AprilTagAlignCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -24,6 +25,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
     private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
     private final IntakeSubsystem m_intake = new IntakeSubsystem();
+    private final LimelightSubsystem limelight = new LimelightSubsystem();
 
 
 
@@ -57,7 +59,7 @@ public class RobotContainer {
 
     // Y Button - manual raise
     m_driverController.y()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
+        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.01));
 
     // A Button - ohcrap button
     m_driverController.a()
@@ -65,7 +67,7 @@ public class RobotContainer {
 
     // X Button - down button
     m_driverController.x()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.1));
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.01));
 
     /* PIVOT CONTROLS */
     
@@ -83,8 +85,10 @@ public class RobotContainer {
 
 
     /* Autoalign?!?!? */
-    m_driverController.rightBumper().whileTrue(new AutoLockToAprilTag(swerveDrive, limelight));
-  }
+      new Trigger(limelight::hasTarget)
+          .and(m_driverController.rightBumper())
+          .whileTrue(new AprilTagAlignCommand(/*drivetrain,*/ limelight));
+  }  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -96,4 +100,4 @@ public class RobotContainer {
     return Autos.exampleAuto(m_exampleSubsystem);
   }
     */
-}
+
