@@ -23,19 +23,19 @@ public class AprilTagAlignCommand extends Command {
         //this.drivetrain = drivetrain;
         this.limelight = limelight;
 
-        rotationController = new PIDController(0.1, 0, 0.01); // Tune these values
-        distanceController = new PIDController(0.5, 0, 0.1); // Tune these values
+        rotationController = new PIDController(0.1, 0, 0.01);
+        distanceController = new PIDController(0.5, 0, 0.1); 
 
         rotationController.setTolerance(1.0); // degrees tolerance
         distanceController.setTolerance(0.1); // meters tolerance
 
-        addRequirements(/*drivetrain */, limelight);
+        addRequirements(/*drivetrain, */ limelight);
     }
 
     @Override
     public void initialize() {
-        limelight.setLedMode(3); // Turn on LEDs
-        limelight.setPipeline(0); // AprilTag pipeline
+        limelight.setLedMode(3); // leds
+        limelight.setPipeline(0); // AprilTag pipeline?
     }
 
     @Override
@@ -81,7 +81,7 @@ public class AprilTagAlignCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.drive(new Translation2d(0, 0), 0, true, true);
+        //drivetrain.drive(new Translation2d(0, 0), 0, true, true);
         limelight.setLedMode(1); // Turn off LEDs
     }
 }
