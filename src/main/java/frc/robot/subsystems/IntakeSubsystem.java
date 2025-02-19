@@ -47,20 +47,34 @@ public class IntakeSubsystem extends SubsystemBase  {
         }
     
         public void setHeight(double targetHeight) {
-            double output = pidController.calculate(getHeight(), targetHeight);
+            double currentPosition = getHeight();
+            double error = calculateShortestError(currentPosition, targetHeight);
+            double output = pidController.calculate(0, error);
             IntakePivotMotor.set(output);
-            holdPosition = targetHeight; 
+            holdPosition = targetHeight;
             holdPosition();
         }
     
         public void holdPosition() {
-            double output = pidController.calculate(getHeight(), holdPosition);
+            double currentPosition = getHeight();
+            double error = calculateShortestError(currentPosition, holdPosition);
+            double output = pidController.calculate(0, error);
             IntakePivotMotor.set(output);
         }
     
         public void killPivot() {
             IntakePivotMotor.stopMotor();  
             holdPosition = getHeight();
+        }
+
+        private double calculateShortestError(double currentPosition, double targetPosition) {
+            double error = targetPosition - currentPosition;
+            if (error > 0.5) {
+                error -= 1.0; 
+            } else if (error < -0.5) {
+                error += 1.0; 
+            }
+            return error;
         }
 
         // wheels motor
