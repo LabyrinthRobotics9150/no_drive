@@ -17,7 +17,6 @@ public class MoveElevatorCommand extends Command {
     @Override
     public void initialize() {
         startingHeight = elevator.getHeight(); 
-        System.out.println("Moving elevator to height: " + targetHeight);
     }
 
     @Override
@@ -27,7 +26,6 @@ public class MoveElevatorCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Returning to starting position: " + startingHeight);
         elevator.setHeight(startingHeight); 
     }
 

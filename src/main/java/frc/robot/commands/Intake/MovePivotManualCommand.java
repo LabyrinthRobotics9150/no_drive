@@ -11,13 +11,13 @@ public class MovePivotManualCommand {
                 if (false /* MAX_POS || MIN_POS */) {
                     end(true);
                 } else {
-                    intake.setPivotSpeed(speed); // Move at the given speed
+                    intake.setPivotSpeed(speed); 
                 }
             }
 
             @Override
             public void end(boolean interrupted) {
-                intake.stopPivot(); // Stop when button is released
+                intake.stopPivot(); 
             }
         };
     }

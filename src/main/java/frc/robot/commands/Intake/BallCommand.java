@@ -5,8 +5,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class BallCommand extends Command {
     private final IntakeSubsystem intake;
-    private final double homePosition = 0.0; // Adjust if needed
-    private final double ballPosition = 0.571; // Adjust if needed
+
+    // not currently functioning. Hardware problem?
+    private final double homePosition = 0.0;
+    private final double ballPosition = 0.571; 
     private double targetPosition;
 
     public BallCommand(IntakeSubsystem intake) {
@@ -16,24 +18,22 @@ public class BallCommand extends Command {
 
     @Override
     public void initialize() {
-        targetPosition = ballPosition; // Move to BALL_POSITION when button is pressed
-        System.out.println("Moving arm to BALL position: " + targetPosition);
+        targetPosition = ballPosition; 
     }
 
     @Override
     public void execute() {
-        intake.setHeight(targetPosition); // Actively hold position using PID
+        intake.setHeight(targetPosition); 
     }
 
     @Override
     public void end(boolean interrupted) {
-        targetPosition = homePosition; // When button is released, move back to HOME
-        System.out.println("Returning to HOME position: " + targetPosition);
+        targetPosition = homePosition; 
         intake.setHeight(targetPosition);
     }
 
     @Override
     public boolean isFinished() {
-        return false; // Runs continuously while the button is held
+        return false; 
     }
 }

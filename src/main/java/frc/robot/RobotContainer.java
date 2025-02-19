@@ -87,9 +87,15 @@ public class RobotContainer {
     // B - Ball command
 
 
+    // initialize objects beforehand
+    MoveElevatorCommand b_Command = new MoveElevatorCommand(m_elevator, 50);
+    KillElevatorCommand a_Command = new KillElevatorCommand(m_elevator);
+    BallCommand lb_Command = new BallCommand(m_intake);
+    AprilTagAlignCommand rb_Command = new AprilTagAlignCommand(/*drivetrain,*/ limelight);
+
     // B Button - move to preset and hold, return to origin when released
     m_primaryController.b()
-    .whileTrue(new MoveElevatorCommand(m_elevator, 50.0));
+    .whileTrue(b_Command);
 
     // Y Button - manual raise
     m_primaryController.y()
@@ -97,7 +103,7 @@ public class RobotContainer {
 
     // A Button - ohcrap button
     m_primaryController.a()
-        .onTrue(new KillElevatorCommand(m_elevator)); 
+        .onTrue(a_Command); 
 
     // X Button - down button
     m_primaryController.x()
@@ -115,13 +121,13 @@ public class RobotContainer {
 
     // Left Bumper - Moves pivot arm to BALL position while held, returns to HOME when released
     m_primaryController.leftBumper()
-    .whileTrue(new BallCommand(m_intake));
+    .whileTrue(lb_Command);
 
 
     /* Autoalign?!?!? */
       new Trigger(limelight::hasTarget)
           .and(m_primaryController.rightBumper())
-          .whileTrue(new AprilTagAlignCommand(/*drivetrain,*/ limelight));
+          .whileTrue(rb_Command);
 
   }  
   
