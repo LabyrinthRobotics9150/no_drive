@@ -14,27 +14,35 @@ public class ElevatorSubsystem extends SubsystemBase {
     public static final SparkFlex elevatorMotor = new SparkFlex(Constants.OperatorConstants.kElevatorLeaderCanId, MotorType.kBrushless); 
     private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
     private final PIDController pidController = new PIDController(0.1, 0, 0);
-    public static final SparkLimitSwitch forwardlimitswitch = elevatorMotor.getForwardLimitSwitch();
-    public static final SparkLimitSwitch reverselimitswitch = elevatorMotor.getReverseLimitSwitch();
-    private double holdPosition = 0.0; 
+    public static final SparkLimitSwitch forwardLimitSwitch = elevatorMotor.getForwardLimitSwitch();
+    public static final SparkLimitSwitch reverseLimitSwitch = elevatorMotor.getReverseLimitSwitch();
+    private double targetPosition = 0.0; 
 
     public ElevatorSubsystem() {
+        // Initialize the encoder position to 0
+        elevatorEncoder.setPosition(0);
+    }
+
+    @Override
+    public void periodic() {
+        // Continuously adjust the elevator position to the target position
+        double output = pidController.calculate(getHeight(), targetPosition);
+        elevatorMotor.set(output);
     }
 
     public void setElevatorSpeed(double speed) {
-        if ( (ElevatorSubsystem.forwardlimitswitch.isPressed() && speed > 0) || 
-        (ElevatorSubsystem.reverselimitswitch.isPressed() && speed < 0) ) {
-            elevatorEncoder.setPosition(0);
+        // Safety checks for limit switches
+        if ((forwardLimitSwitch.isPressed() && speed > 0) || 
+            (reverseLimitSwitch.isPressed() && speed < 0)) {
             stopElevator();
         } else {
             elevatorMotor.set(speed);
-            holdPosition = getHeight();
         }
     }
 
     public void stopElevator() {
         elevatorMotor.set(0);
-        holdPosition = getHeight();
+        targetPosition = getHeight(); // Hold the current position
     }
 
     public double getHeight() {
@@ -42,20 +50,18 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setHeight(double targetHeight) {
-        double output = pidController.calculate(getHeight(), targetHeight);
-        elevatorMotor.set(output);
-        holdPosition = targetHeight; 
-    }
-
-    public void holdPosition() {
-        double output = pidController.calculate(getHeight(), holdPosition);
-        elevatorMotor.set(output);
+        // Safety checks for limit switches
+        if ((forwardLimitSwitch.isPressed() && targetHeight > getHeight()) || 
+            (reverseLimitSwitch.isPressed() && targetHeight < getHeight())) {
+            stopElevator();
+        } else {
+            targetPosition = targetHeight;
+        }
     }
 
     public void killElevator() {
         elevatorMotor.stopMotor(); 
         pidController.reset(); 
-        holdPosition = getHeight();
+        targetPosition = getHeight(); // Hold the current position
     }
-    
 }

@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase  {
         }
     
         public void stopPivot() {
-            IntakePivotMotor.set(0);
+            IntakePivotMotor.stopMotor();
             holdPosition = getHeight();
             holdPosition();
         }
@@ -61,4 +61,12 @@ public class IntakeSubsystem extends SubsystemBase  {
         }
 
         // wheels motor
+
+        public void moveWheel(double speed) {
+            IntakeWheelsMotor.set(speed);
+        }
+
+        public void stopWheel() {
+            IntakeWheelsMotor.stopMotor();
+        }
 }

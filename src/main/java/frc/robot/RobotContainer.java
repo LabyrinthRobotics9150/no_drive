@@ -8,7 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Elevator.*;
 import frc.robot.commands.Intake.BallCommand;
 import frc.robot.commands.Intake.MovePivotManualCommand;
+import frc.robot.commands.Intake.ScoreCommand;
 import frc.robot.commands.Limelight.AprilTagAlignCommand;
+import frc.robot.commands.Swerve.ResetGyroCommand;
+import frc.robot.commands.Swerve.SlowCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -53,18 +56,49 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
+    /* INITIALIZING ALL OBJECTS */
+
+    // primary
+    SlowCommand slowCommand = new SlowCommand();
+    ScoreCommand scoreCommand = new ScoreCommand(m_intake);
+    AprilTagAlignCommand alignRightCommand = new AprilTagAlignCommand(/*drivetrain,*/ limelight, true);
+    AprilTagAlignCommand alignLeftCommand = new AprilTagAlignCommand(/*drivetrain,*/ limelight, false);
+    ResetGyroCommand resetGyroCommand = new ResetGyroCommand(/* drivetrain? maybe? */);
+
+    // secondary
+    MoveElevatorCommand b_Command = new MoveElevatorCommand(m_elevator, 50);
+    KillElevatorCommand a_Command = new KillElevatorCommand(m_elevator);
+    BallCommand lb_Command = new BallCommand(m_intake);
+
+
+
 
     /* ELEVATOR CONTROLS */
 
     /* PRIMARY */
 
     // Left Trigger - slow mode
+    m_primaryController.leftTrigger()
+    .whileTrue(slowCommand);
 
     // Right Trigger - Score coral
+    m_primaryController.rightTrigger()
+    .onTrue(scoreCommand); // talk with julian about if this command is "shoot until release"
 
     // Rb - Auto-align to right coral spoke
+    m_primaryController.rightBumper()
+    .onTrue(alignRightCommand);
 
     // Lb - Auto-align to left coral spoke
+    m_primaryController.leftBumper()
+    .onTrue(alignLeftCommand);
+
+    /*
+      new Trigger(limelight::hasTarget)
+          .and(m_primaryController.rightBumper())
+          .whileTrue(rb_Command);
+  }  
+     */
 
     // 3 lines - resets gyro
 
@@ -85,13 +119,6 @@ public class RobotContainer {
     // RT - intake in
 
     // B - Ball command
-
-
-    // initialize objects beforehand
-    MoveElevatorCommand b_Command = new MoveElevatorCommand(m_elevator, 50);
-    KillElevatorCommand a_Command = new KillElevatorCommand(m_elevator);
-    BallCommand lb_Command = new BallCommand(m_intake);
-    AprilTagAlignCommand rb_Command = new AprilTagAlignCommand(/*drivetrain,*/ limelight);
 
     // B Button - move to preset and hold, return to origin when released
     m_primaryController.b()
@@ -122,15 +149,6 @@ public class RobotContainer {
     // Left Bumper - Moves pivot arm to BALL position while held, returns to HOME when released
     m_primaryController.leftBumper()
     .whileTrue(lb_Command);
-
-
-    /* Autoalign?!?!? */
-      new Trigger(limelight::hasTarget)
-          .and(m_primaryController.rightBumper())
-          .whileTrue(rb_Command);
-
-  }  
-  
   
 }
 
@@ -145,3 +163,4 @@ public class RobotContainer {
   }
     */
 
+}

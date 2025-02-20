@@ -19,7 +19,8 @@ public class AprilTagAlignCommand extends Command {
     private static final double APRILTAG_HEIGHT = 0.2; // meters
     private static final double LIMELIGHT_MOUNT_ANGLE = 30.0; // degrees
 
-    public AprilTagAlignCommand(/* Drivetrain drivetrain, */ LimelightSubsystem limelight) {
+    public AprilTagAlignCommand(/* Drivetrain drivetrain, */ LimelightSubsystem limelight, Boolean alignRight) {
+        /* TO DO: ALIGN LEFT AND RIGHT */
         //this.drivetrain = drivetrain;
         this.limelight = limelight;
 
