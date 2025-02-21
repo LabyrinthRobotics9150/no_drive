@@ -13,22 +13,21 @@ public class BallCommand extends Command {
 
     @Override
     public void initialize() {
-        intake.setHeight(intake.BALL_POSITION); // Move to ball position
+        intake.setHeight(intake.BALL_POSITION);
     }
 
     @Override
     public void execute() {
-        // The intake subsystem handles the motion profile in its periodic method
+        // now handled in subsystem
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setHeight(intake.HOME_POSITION); // Return to home position
+        intake.setHeight(intake.HOME_POSITION); 
     }
 
     @Override
     public boolean isFinished() {
-        // The command should not finish on its own; it should run while the button is held
         return false;
     }
 }

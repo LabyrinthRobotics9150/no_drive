@@ -19,16 +19,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     public static final SparkLimitSwitch forwardLimitSwitch = elevatorMotor.getForwardLimitSwitch();
     public static final SparkLimitSwitch reverseLimitSwitch = elevatorMotor.getReverseLimitSwitch();
 
-    // Motion profiling
     private TrapezoidProfile motionProfile;
     private final Timer profileTimer = new Timer();
     private TrapezoidProfile.State targetState = new TrapezoidProfile.State();
     private TrapezoidProfile.State currentState = new TrapezoidProfile.State();
 
-    // Motion profile constraints (max velocity and acceleration)
+    // (max velocity and acceleration)
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(
-        1.0, // Max velocity (units per second)
-        0.5  // Max acceleration (units per second squared)
+        1.0, // (units per second)
+        0.5  // (units per second squared)
     );
 
     public ElevatorSubsystem() {
@@ -36,7 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorEncoder.setPosition(0);
         profileTimer.start();
 
-        // Initialize the motion profile with constraints
+        // Initialize the motion profile with limits
         motionProfile = new TrapezoidProfile(constraints);
     }
 

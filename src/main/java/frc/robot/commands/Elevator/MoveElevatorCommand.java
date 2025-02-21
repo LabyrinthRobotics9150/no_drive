@@ -17,24 +17,22 @@ public class MoveElevatorCommand extends Command {
     @Override
     public void initialize() {
         startingHeight = elevator.getHeight(); 
-        elevator.setHeight(targetHeight); // Set the target position
+        elevator.setHeight(targetHeight); 
     }
 
     @Override
     public void execute() {
-        // Motion profile is handled in the subsystem's periodic method
     }
 
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            elevator.setHeight(startingHeight); // Return to the starting position if interrupted
+            elevator.setHeight(startingHeight); 
         }
     }
 
     @Override
     public boolean isFinished() {
-        // Check if the elevator has reached the target position
-        return Math.abs(elevator.getHeight() - targetHeight) < 0.01; // Tolerance for position
+        return Math.abs(elevator.getHeight() - targetHeight) < 0.01;
     }
 }

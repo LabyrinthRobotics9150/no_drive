@@ -19,10 +19,10 @@ public class IntakeSubsystem extends SubsystemBase {
     public double HOME_POSITION = 0.84;
     public double BALL_POSITION = 0.3;
 
-    // Motion profile constraints (max velocity and acceleration)
+    // (max velocity and acceleration)
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1.0, 0.5); // Adjust values as needed
 
-    // Motion profile states
+    // profile states
     private TrapezoidProfile.State targetState = new TrapezoidProfile.State(HOME_POSITION, 0);
     private TrapezoidProfile.State currentState = new TrapezoidProfile.State(HOME_POSITION, 0);
 
@@ -57,11 +57,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
     // Stop the pivot motor
     public void stopPivot() {
-        IntakePivotMotor.stopMotor();
-    }
-
-    // Kill the pivot motor (emergency stop)
-    public void killPivot() {
         IntakePivotMotor.stopMotor();
     }
 
