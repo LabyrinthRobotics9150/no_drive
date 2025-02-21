@@ -13,21 +13,22 @@ public class BallCommand extends Command {
 
     @Override
     public void initialize() {
-        intake.setHeight(intake.BALL_POSITION);
+        intake.setHeight(intake.BALL_POSITION); // Move to ball position
     }
 
     @Override
     public void execute() {
-        // periodic method does work
+        // The intake subsystem handles the motion profile in its periodic method
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setHeight(intake.HOME_POSITION); // return home
+        intake.setHeight(intake.HOME_POSITION); // Return to home position
     }
 
     @Override
     public boolean isFinished() {
-        return false; 
+        // End the command when the pivot reaches the target position
+        return Math.abs(intake.getHeight() - intake.BALL_POSITION) < 0.01; // Tolerance for position
     }
 }

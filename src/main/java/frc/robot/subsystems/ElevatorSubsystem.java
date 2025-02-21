@@ -9,6 +9,8 @@ import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.Timer;
 
 public class ElevatorSubsystem extends SubsystemBase {
     public static final SparkFlex elevatorMotor = new SparkFlex(Constants.OperatorConstants.kElevatorLeaderCanId, MotorType.kBrushless); 
@@ -16,22 +18,35 @@ public class ElevatorSubsystem extends SubsystemBase {
     private final PIDController pidController = new PIDController(0.1, 0, 0);
     public static final SparkLimitSwitch forwardLimitSwitch = elevatorMotor.getForwardLimitSwitch();
     public static final SparkLimitSwitch reverseLimitSwitch = elevatorMotor.getReverseLimitSwitch();
-    private double targetPosition = 0.0; 
+
+    // Motion profile constraints (max velocity and acceleration)
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1.0, 0.5); // Adjust values as needed
+
+    // Motion profile state
+    private TrapezoidProfile.State targetState = new TrapezoidProfile.State();
+    private TrapezoidProfile.State currentState = new TrapezoidProfile.State();
+
+    private final Timer timer = new Timer();
 
     public ElevatorSubsystem() {
-        // Initialize the encoder position at 0
         elevatorEncoder.setPosition(0);
+        timer.start();
     }
 
     @Override
     public void periodic() {
-        // Continuously adjust the elevator position to the target position
-        double output = pidController.calculate(getHeight(), targetPosition);
+        // Generate a new motion profile
+        TrapezoidProfile profile = new TrapezoidProfile(constraints, targetState, currentState);
+
+        // Update the current state based on the profile
+        currentState = profile.calculate(timer.get());
+
+        // Use the PID controller to follow the profile
+        double output = pidController.calculate(getHeight(), currentState.position);
         elevatorMotor.set(output);
     }
 
     public void setElevatorSpeed(double speed) {
-        // Safety checks for limit switches
         if ((forwardLimitSwitch.isPressed() && speed > 0) || 
             (reverseLimitSwitch.isPressed() && speed < 0)) {
             stopElevator();
@@ -42,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public void stopElevator() {
         elevatorMotor.set(0);
-        targetPosition = getHeight(); // Hold the current position
+        targetState = new TrapezoidProfile.State(getHeight(), 0); // Hold the current position
     }
 
     public double getHeight() {
@@ -50,18 +65,19 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setHeight(double targetHeight) {
-        // Safety checks for limit switches
         if ((forwardLimitSwitch.isPressed() && targetHeight > getHeight()) || 
             (reverseLimitSwitch.isPressed() && targetHeight < getHeight())) {
             stopElevator();
         } else {
-            targetPosition = targetHeight;
+            // Update the target state for the motion profile
+            targetState = new TrapezoidProfile.State(targetHeight, 0); // Target velocity is 0
+            timer.reset(); // Reset the timer for the new profile
         }
     }
 
     public void killElevator() {
         elevatorMotor.stopMotor(); 
         pidController.reset(); 
-        targetPosition = getHeight(); // Hold the current position
+        targetState = new TrapezoidProfile.State(getHeight(), 0); // Hold the current position
     }
 }
