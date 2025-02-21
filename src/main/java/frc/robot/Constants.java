@@ -26,8 +26,8 @@ public final class Constants {
         public static final int kFunnelPivotCanId = 3;
         
         // elevator
-        public static final int kElevatorFollowerCanId = 4;
-        public static final int kElevatorLeaderCanId = 5;
+        public static final int kElevatorFollowerCanId = 5;
+        public static final int kElevatorLeaderCanId = 4;
 
         // drive
         /*        public static final int kFrontLeftDrivingCanId = 1;

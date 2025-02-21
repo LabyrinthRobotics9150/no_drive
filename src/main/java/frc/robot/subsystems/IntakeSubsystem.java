@@ -16,8 +16,8 @@ public class IntakeSubsystem extends SubsystemBase  {
     AbsoluteEncoder intakePivotEncoder = IntakePivotMotor.getAbsoluteEncoder();
     // home - 0.9278091788291931
     // ball - 0.5219756960868835
-    public double HOME_POSITION = 0.0;
-    public double BALL_POSITION = 0.571;
+    public double HOME_POSITION = 0.84;
+    public double BALL_POSITION = 0.3;
     private double targetPosition = HOME_POSITION; 
 
     public IntakeSubsystem() {

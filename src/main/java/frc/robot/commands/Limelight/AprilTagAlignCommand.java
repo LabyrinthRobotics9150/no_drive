@@ -43,10 +43,10 @@ public class AprilTagAlignCommand extends Command {
     @Override
     public void execute() {
         if (!limelight.hasTarget()) return;
-
         double tx = limelight.getTargetX();
         double ty = limelight.getTargetY();
         double distance = calculateDistance(ty);
+        System.out.println("apriltag! Distance: " + distance);
 
         // Adjust the tx target based on the alignment direction
         // if allignright is true, change horizontal offset. if not, reverse it

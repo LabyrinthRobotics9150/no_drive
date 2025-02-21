@@ -45,6 +45,7 @@ public class FollowClosestAprilTagCommand extends Command {
         double tx = limelight.getTargetX();
         double ty = limelight.getTargetY();
         double distance = calculateDistance(ty);
+        System.out.println("apriltag! Distance: " + distance);
 
         // Calculate rotation and forward speeds
         double rotationSpeed = -rotationController.calculate(tx, 0); // Center on the AprilTag
