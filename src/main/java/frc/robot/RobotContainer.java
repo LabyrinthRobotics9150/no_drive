@@ -7,9 +7,11 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Elevator.*;
 import frc.robot.commands.Intake.BallCommand;
-import frc.robot.commands.Intake.MovePivotManualCommand;
-import frc.robot.commands.Intake.ScoreCommand;
+import frc.robot.commands.Intake.IntakeOuttakeCommand;
+import frc.robot.commands.Intake.IntakeOuttakeCommand;
+import frc.robot.commands.Intake.WheelMoveCommand;
 import frc.robot.commands.Limelight.AprilTagAlignCommand;
+import frc.robot.commands.Limelight.FollowClosestAprilTagCommand;
 import frc.robot.commands.Swerve.ResetGyroCommand;
 import frc.robot.commands.Swerve.SlowCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -29,6 +31,25 @@ public class RobotContainer {
     private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
     private final IntakeSubsystem m_intake = new IntakeSubsystem();
     private final LimelightSubsystem limelight = new LimelightSubsystem();
+    /* INITIALIZING ALL OBJECTS FOR COMMANDS */
+
+    // primary
+    SlowCommand slowCommand = new SlowCommand();
+    IntakeOuttakeCommand intakeOuttakeCommand = new IntakeOuttakeCommand(m_intake);
+    AprilTagAlignCommand alignRightCommand = new AprilTagAlignCommand(/*drivetrain,*/ limelight, true);
+    AprilTagAlignCommand alignLeftCommand = new AprilTagAlignCommand(/*drivetrain,*/ limelight, false);
+    ResetGyroCommand resetGyroCommand = new ResetGyroCommand(/* drivetrain? maybe? */);
+
+    // temporary
+    FollowClosestAprilTagCommand closestAprilTagCommand = new FollowClosestAprilTagCommand(limelight);
+
+    // secondary
+    MoveElevatorCommand level4Command = new MoveElevatorCommand(m_elevator, 5);
+    MoveElevatorCommand level3Command = new MoveElevatorCommand(m_elevator, 10);
+    MoveElevatorCommand level2Command = new MoveElevatorCommand(m_elevator, 25);
+    MoveElevatorCommand level1Command = new MoveElevatorCommand(m_elevator, 50);
+    WheelMoveCommand wheelMoveCommand = new WheelMoveCommand(m_intake, .1);
+    BallCommand ballCommand = new BallCommand(m_intake);
 
 
 
@@ -55,35 +76,15 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-
-    /* INITIALIZING ALL OBJECTS */
-
-    // primary
-    SlowCommand slowCommand = new SlowCommand();
-    ScoreCommand scoreCommand = new ScoreCommand(m_intake);
-    AprilTagAlignCommand alignRightCommand = new AprilTagAlignCommand(/*drivetrain,*/ limelight, true);
-    AprilTagAlignCommand alignLeftCommand = new AprilTagAlignCommand(/*drivetrain,*/ limelight, false);
-    ResetGyroCommand resetGyroCommand = new ResetGyroCommand(/* drivetrain? maybe? */);
-
-    // secondary
-    MoveElevatorCommand b_Command = new MoveElevatorCommand(m_elevator, 50);
-    KillElevatorCommand a_Command = new KillElevatorCommand(m_elevator);
-    BallCommand lb_Command = new BallCommand(m_intake);
-
-
-
-
-    /* ELEVATOR CONTROLS */
-
     /* PRIMARY */
 
     // Left Trigger - slow mode
     m_primaryController.leftTrigger()
     .whileTrue(slowCommand);
 
-    // Right Trigger - Score coral
+    // Right Trigger - intake / outtake dependant on where the pivot arm is
     m_primaryController.rightTrigger()
-    .onTrue(scoreCommand); // talk with julian about if this command is "shoot until release"
+    .onTrue(intakeOuttakeCommand);
 
     // Rb - Auto-align to right coral spoke
     m_primaryController.rightBumper()
@@ -93,6 +94,10 @@ public class RobotContainer {
     m_primaryController.leftBumper()
     .onTrue(alignLeftCommand);
 
+    // **TEMPORARY** follow nearest apriltag
+    m_primaryController.x()
+    .whileTrue(closestAprilTagCommand);
+
     /*
       new Trigger(limelight::hasTarget)
           .and(m_primaryController.rightBumper())
@@ -100,7 +105,9 @@ public class RobotContainer {
   }  
      */
 
-    // 3 lines - resets gyro
+    // x - resets gyro
+    m_primaryController.x()
+    .onTrue(resetGyroCommand);
 
 
     /* SECONDARY */
@@ -108,35 +115,40 @@ public class RobotContainer {
     // elevator heights
 
     // A - Level 4
+    m_secondaryController.a()
+    .whileTrue(level4Command);
 
     // B - Level 3
+    m_secondaryController.b()
+    .whileTrue(level3Command);
 
-    // C - Level 2
+    // X - Level 2
+    m_secondaryController.x()
+    .whileTrue(level2Command);
 
-    // D - Level 1
+    // Y - Level 1
+    m_secondaryController.y()
+    .whileTrue(level1Command);
 
-    
+  
     // RT - intake in
+    m_secondaryController.rightTrigger()
+    .whileTrue(wheelMoveCommand);
 
     // B - Ball command
+    m_secondaryController.b()
+    .whileTrue(ballCommand);
 
-    // B Button - move to preset and hold, return to origin when released
-    m_primaryController.b()
-    .whileTrue(b_Command);
-
+    /* 
     // Y Button - manual raise
     m_primaryController.y()
         .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.01));
-
-    // A Button - ohcrap button
-    m_primaryController.a()
-        .onTrue(a_Command); 
 
     // X Button - down button
     m_primaryController.x()
     .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.01));
 
-    /* PIVOT CONTROLS */
+    /* PIVOT CONTROLS
     
     // Left Trigger - manual pivot raise
     m_primaryController.leftTrigger()
@@ -149,6 +161,8 @@ public class RobotContainer {
     // Left Bumper - Moves pivot arm to BALL position while held, returns to HOME when released
     m_primaryController.leftBumper()
     .whileTrue(lb_Command);
+
+    */
   
 }
 
