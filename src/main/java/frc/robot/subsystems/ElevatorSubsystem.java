@@ -19,34 +19,42 @@ public class ElevatorSubsystem extends SubsystemBase {
     public static final SparkLimitSwitch forwardLimitSwitch = elevatorMotor.getForwardLimitSwitch();
     public static final SparkLimitSwitch reverseLimitSwitch = elevatorMotor.getReverseLimitSwitch();
 
-    // Motion profile constraints (max velocity and acceleration)
-    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1.0, 0.5); // Adjust values as needed
-
-    // Motion profile state
+    // Motion profiling
+    private TrapezoidProfile motionProfile;
+    private final Timer profileTimer = new Timer();
     private TrapezoidProfile.State targetState = new TrapezoidProfile.State();
     private TrapezoidProfile.State currentState = new TrapezoidProfile.State();
 
-    private final Timer timer = new Timer();
+    // Motion profile constraints (max velocity and acceleration)
+    private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(
+        1.0, // Max velocity (units per second)
+        0.5  // Max acceleration (units per second squared)
+    );
 
     public ElevatorSubsystem() {
+        // Initialize the encoder position at 0
         elevatorEncoder.setPosition(0);
-        timer.start();
+        profileTimer.start();
+
+        // Initialize the motion profile with constraints
+        motionProfile = new TrapezoidProfile(constraints);
     }
 
     @Override
     public void periodic() {
-        // Generate a new motion profile
-        TrapezoidProfile profile = new TrapezoidProfile(constraints, targetState, currentState);
+        // Update the motion profile
+        if (motionProfile != null) {
+            double elapsedTime = profileTimer.get();
+            currentState = motionProfile.calculate(elapsedTime, currentState, targetState);
 
-        // Update the current state based on the profile
-        currentState = profile.calculate(timer.get());
-
-        // Use the PID controller to follow the profile
-        double output = pidController.calculate(getHeight(), currentState.position);
-        elevatorMotor.set(output);
+            // Set the elevator motor output based on the motion profile
+            double output = pidController.calculate(getHeight(), currentState.position);
+            elevatorMotor.set(output);
+        }
     }
 
     public void setElevatorSpeed(double speed) {
+        // Safety checks for limit switches
         if ((forwardLimitSwitch.isPressed() && speed > 0) || 
             (reverseLimitSwitch.isPressed() && speed < 0)) {
             stopElevator();
@@ -58,6 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void stopElevator() {
         elevatorMotor.set(0);
         targetState = new TrapezoidProfile.State(getHeight(), 0); // Hold the current position
+        motionProfile = null; // Stop the motion profile
     }
 
     public double getHeight() {
@@ -65,13 +74,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setHeight(double targetHeight) {
+        // Safety checks for limit switches
         if ((forwardLimitSwitch.isPressed() && targetHeight > getHeight()) || 
             (reverseLimitSwitch.isPressed() && targetHeight < getHeight())) {
             stopElevator();
         } else {
-            // Update the target state for the motion profile
-            targetState = new TrapezoidProfile.State(targetHeight, 0); // Target velocity is 0
-            timer.reset(); // Reset the timer for the new profile
+            // Create a new motion profile
+            targetState = new TrapezoidProfile.State(targetHeight, 0);
+            currentState = new TrapezoidProfile.State(getHeight(), 0);
+            motionProfile = new TrapezoidProfile(constraints);
+            profileTimer.reset(); // Reset the timer for the new motion profile
         }
     }
 
@@ -79,5 +91,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         elevatorMotor.stopMotor(); 
         pidController.reset(); 
         targetState = new TrapezoidProfile.State(getHeight(), 0); // Hold the current position
+        motionProfile = null; // Stop the motion profile
     }
 }

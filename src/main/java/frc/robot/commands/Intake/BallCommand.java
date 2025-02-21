@@ -28,7 +28,7 @@ public class BallCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        // End the command when the pivot reaches the target position
-        return Math.abs(intake.getHeight() - intake.BALL_POSITION) < 0.01; // Tolerance for position
+        // The command should not finish on its own; it should run while the button is held
+        return false;
     }
 }

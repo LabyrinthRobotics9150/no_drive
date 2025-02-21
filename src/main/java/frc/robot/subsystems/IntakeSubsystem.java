@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.SparkFlex;
-import com.revrobotics.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -22,11 +22,12 @@ public class IntakeSubsystem extends SubsystemBase {
     // Motion profile constraints (max velocity and acceleration)
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(1.0, 0.5); // Adjust values as needed
 
-    // Motion profile state
+    // Motion profile states
     private TrapezoidProfile.State targetState = new TrapezoidProfile.State(HOME_POSITION, 0);
     private TrapezoidProfile.State currentState = new TrapezoidProfile.State(HOME_POSITION, 0);
 
     private final Timer timer = new Timer();
+    private TrapezoidProfile profile = new TrapezoidProfile(constraints);
 
     public IntakeSubsystem() {
         timer.start();
@@ -35,11 +36,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // Generate a new motion profile
-        TrapezoidProfile profile = new TrapezoidProfile(constraints, targetState, currentState);
-
         // Update the current state based on the profile
-        currentState = profile.calculate(timer.get());
+        currentState = profile.calculate(timer.get(), currentState, targetState);
 
         // Use the PID controller to follow the profile
         double output = pidController.calculate(getHeight(), currentState.position);

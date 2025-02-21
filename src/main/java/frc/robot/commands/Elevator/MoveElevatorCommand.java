@@ -6,6 +6,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 public class MoveElevatorCommand extends Command {
     private final ElevatorSubsystem elevator;
     private final double targetHeight;
+    private double startingHeight;
 
     public MoveElevatorCommand(ElevatorSubsystem elevator, double height) {
         this.elevator = elevator;
@@ -15,22 +16,25 @@ public class MoveElevatorCommand extends Command {
 
     @Override
     public void initialize() {
+        startingHeight = elevator.getHeight(); 
         elevator.setHeight(targetHeight); // Set the target position
     }
 
     @Override
     public void execute() {
-        // The elevator subsystem handles the motion profile in its periodic method
+        // Motion profile is handled in the subsystem's periodic method
     }
 
     @Override
     public void end(boolean interrupted) {
-        elevator.stopElevator(); // Stop the elevator when the command ends
+        if (interrupted) {
+            elevator.setHeight(startingHeight); // Return to the starting position if interrupted
+        }
     }
 
     @Override
     public boolean isFinished() {
-        // End the command when the elevator reaches the target position
+        // Check if the elevator has reached the target position
         return Math.abs(elevator.getHeight() - targetHeight) < 0.01; // Tolerance for position
     }
 }
