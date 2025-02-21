@@ -6,11 +6,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class BallCommand extends Command {
     private final IntakeSubsystem intake;
 
-    // not currently functioning. Hardware problem?
-    private final double homePosition = 0.0;
-    private final double ballPosition = 0.571; 
-    private double targetPosition;
-
     public BallCommand(IntakeSubsystem intake) {
         this.intake = intake;
         addRequirements(intake);
@@ -18,18 +13,17 @@ public class BallCommand extends Command {
 
     @Override
     public void initialize() {
-        targetPosition = ballPosition; 
+        intake.setHeight(intake.BALL_POSITION);
     }
 
     @Override
     public void execute() {
-        intake.setHeight(targetPosition); 
+        // periodic method does work
     }
 
     @Override
     public void end(boolean interrupted) {
-        targetPosition = homePosition; 
-        intake.setHeight(targetPosition);
+        intake.setHeight(intake.HOME_POSITION); // return home
     }
 
     @Override

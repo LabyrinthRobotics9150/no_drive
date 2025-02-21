@@ -17,20 +17,21 @@ public class MoveElevatorCommand extends Command {
     @Override
     public void initialize() {
         startingHeight = elevator.getHeight(); 
+        elevator.setHeight(targetHeight); // Set the target position
     }
 
     @Override
     public void execute() {
-        elevator.setHeight(targetHeight); 
+        // handled in periodic
     }
 
     @Override
     public void end(boolean interrupted) {
-        elevator.setHeight(startingHeight); 
+        elevator.setHeight(startingHeight); // Return to the starting position
     }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return false; // Run until interrupted
     }
 }

@@ -19,7 +19,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double targetPosition = 0.0; 
 
     public ElevatorSubsystem() {
-        // Initialize the encoder position to 0
+        // Initialize the encoder position at 0
         elevatorEncoder.setPosition(0);
     }
 
