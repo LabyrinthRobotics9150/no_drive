@@ -8,8 +8,7 @@ public class MoveElevatorManualCommand {
         return new Command() {
             @Override
             public void initialize() {
-                // Disable the motion profile when manually controlling the elevator
-                elevator.stopElevator(); // Stop the motion profile and hold the current position
+                elevator.stopElevator();
             }
 
             @Override
@@ -19,14 +18,15 @@ public class MoveElevatorManualCommand {
                     (ElevatorSubsystem.reverseLimitSwitch.isPressed() && speed < 0)) {
                     elevator.stopElevator(); 
                 } else {
-                    elevator.setElevatorSpeed(speed); // Set the manual speed
+                    elevator.setElevatorSpeed(speed); 
                 }
                 System.out.println("height: " + elevator.getHeight());
             }
 
             @Override
             public void end(boolean interrupted) {
-                elevator.stopElevator();
+                // Re-enable the motion profile to hold the current position
+                elevator.setHeight(elevator.getHeight());
             }
 
             @Override
