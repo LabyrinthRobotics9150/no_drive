@@ -44,11 +44,12 @@ public class RobotContainer {
     FollowClosestAprilTagCommand closestAprilTagCommand = new FollowClosestAprilTagCommand(limelight);
 
     // secondary
-    MoveElevatorCommand level4Command = new MoveElevatorCommand(m_elevator, 5);
-    MoveElevatorCommand level3Command = new MoveElevatorCommand(m_elevator, 10);
-    MoveElevatorCommand level2Command = new MoveElevatorCommand(m_elevator, 25);
-    MoveElevatorCommand level1Command = new MoveElevatorCommand(m_elevator, 50);
+    MoveElevatorCommand level4Command = new MoveElevatorCommand(m_elevator, 16); // tune these
+    MoveElevatorCommand level3Command = new MoveElevatorCommand(m_elevator, 9.5);
+    MoveElevatorCommand level2Command = new MoveElevatorCommand(m_elevator, 5.39);
+    MoveElevatorCommand level1Command = new MoveElevatorCommand(m_elevator, 0);
     WheelMoveCommand wheelMoveCommand = new WheelMoveCommand(m_intake, .1);
+    WheelMoveCommand wheelMoveReverseCommand = new WheelMoveCommand(m_intake, -.1);
     BallCommand ballCommand = new BallCommand(m_intake);
 
 
@@ -62,7 +63,7 @@ public class RobotContainer {
   
   
     // determines which commands are enabled;
-    boolean TESTING_MODE = false;
+    boolean TESTING_MODE = true;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -81,21 +82,11 @@ public class RobotContainer {
    */
   private void configureBindings() {
     if(TESTING_MODE) {
-    // Y Button - manual raise
-    m_primaryController.y()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
-
-    // X Button - down button
-    m_primaryController.x()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.1));
-
-    /* PIVOT CONTROLS */
-
-    // Left Trigger - manual pivot raise
+    // Left Bumper - manual pivot raise
     m_primaryController.leftBumper()
     .whileTrue(MovePivotManualCommand.movePivot(m_intake, .05));
 
-    // Left Trigger - manual pivot raise
+    // Right Bumper - manual pivot lower
     m_primaryController.rightBumper()
     .whileTrue(MovePivotManualCommand.movePivot(m_intake, -.05));
 
@@ -105,8 +96,13 @@ public class RobotContainer {
 
     // left Trigger - manual pivot lower
     m_primaryController.leftTrigger()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -.1));
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -.02));
 
+    m_primaryController.a()
+    .whileTrue(wheelMoveCommand);
+
+    m_primaryController.x()
+    .whileTrue(wheelMoveReverseCommand);
     } else {
     /* PRIMARY */
 

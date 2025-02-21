@@ -11,7 +11,7 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase  {
     public static final SparkFlex IntakePivotMotor = new SparkFlex(Constants.OperatorConstants.kIntakePivotCanId, MotorType.kBrushless); 
     public static final SparkFlex IntakeWheelsMotor = new SparkFlex(Constants.OperatorConstants.kIntakeWheelsCanId, MotorType.kBrushless);
-    private final PIDController pidController = new PIDController(0.1, 0, 0);
+    private final PIDController pidController = new PIDController(0.5, 0, 0);
 
     AbsoluteEncoder intakePivotEncoder = IntakePivotMotor.getAbsoluteEncoder();
     // home - 0.9278091788291931

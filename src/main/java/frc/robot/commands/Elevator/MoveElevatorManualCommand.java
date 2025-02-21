@@ -12,6 +12,7 @@ public class MoveElevatorManualCommand {
                 ElevatorSubsystem.reverseLimitSwitch.isPressed() && speed < 0) {
                 } else {
                     elevator.setElevatorSpeed(speed);
+                    System.out.println("height: " + elevator.elevatorMotor.getEncoder().getPosition());
                 } 
             }
 
