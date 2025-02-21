@@ -60,6 +60,10 @@ public class IntakeSubsystem extends SubsystemBase {
         IntakePivotMotor.stopMotor();
     }
 
+    public double getTargetPosition() {
+        return targetState.position;
+    }
+
     // Wheels motor
     public void moveWheel(double speed) {
         IntakeWheelsMotor.set(speed);

@@ -6,18 +6,32 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class MovePivotManualCommand {
     public static Command movePivot(IntakeSubsystem intake, double speed) {
         return new Command() {
+            private double previousTarget; 
+
+            @Override
+            public void initialize() {
+                previousTarget = intake.getTargetPosition();
+
+                intake.setHeight(intake.getHeight());
+            }
+
             @Override
             public void execute() {
-                if (false /* MAX_POS || MIN_POS */) {
-                    end(true);
-                } else {
-                    intake.setHeight(intake.getHeight() + .1); 
-                }
+                // Set the pivot motor speed directly
+                intake.IntakePivotMotor.set(speed);
             }
 
             @Override
             public void end(boolean interrupted) {
-                intake.stopPivot(); 
+            // Stop & Restore the previous target position to resume the motion profile
+                intake.stopPivot();
+
+                intake.setHeight(previousTarget);
+            }
+
+            @Override
+            public boolean isFinished() {
+                return false;
             }
         };
     }
