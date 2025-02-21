@@ -9,7 +9,6 @@ import frc.robot.commands.Elevator.*;
 import frc.robot.commands.Intake.BallCommand;
 import frc.robot.commands.Intake.IntakeOuttakeCommand;
 import frc.robot.commands.Intake.MovePivotManualCommand;
-import frc.robot.commands.Intake.IntakeOuttakeCommand;
 import frc.robot.commands.Intake.WheelMoveCommand;
 import frc.robot.commands.Limelight.AprilTagAlignCommand;
 import frc.robot.commands.Limelight.FollowClosestAprilTagCommand;
@@ -60,6 +59,10 @@ public class RobotContainer {
     
   private final CommandXboxController m_secondaryController = 
     new CommandXboxController(OperatorConstants.kSecondaryControllerPort);
+  
+  
+    // determines which commands are enabled;
+    boolean TESTING_MODE = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -77,27 +80,51 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    if(TESTING_MODE) {
+    // Y Button - manual raise
+    m_primaryController.y()
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
+
+    // X Button - down button
+    m_primaryController.x()
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.1));
+
+    /* PIVOT CONTROLS */
+
+    // Left Trigger - manual pivot raise
+    m_primaryController.leftBumper()
+    .whileTrue(MovePivotManualCommand.movePivot(m_intake, .05));
+
+    // Left Trigger - manual pivot raise
+    m_primaryController.rightBumper()
+    .whileTrue(MovePivotManualCommand.movePivot(m_intake, -.05));
+
+    // Right Trigger - manual pivot lower
+    m_primaryController.rightTrigger()
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, .1));
+
+    // left Trigger - manual pivot lower
+    m_primaryController.leftTrigger()
+    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -.1));
+
+    } else {
     /* PRIMARY */
 
     // Left Trigger - slow mode
-    //m_primaryController.leftTrigger()
-    //.whileTrue(slowCommand);
+    m_primaryController.leftTrigger()
+    .whileTrue(slowCommand);
 
     // Right Trigger - intake / outtake dependant on where the pivot arm is
     m_primaryController.rightTrigger()
     .onTrue(intakeOuttakeCommand);
 
     // Rb - Auto-align to right coral spoke
-    //m_primaryController.rightBumper()
-    //.onTrue(alignRightCommand);
+    m_primaryController.rightBumper()
+    .onTrue(alignRightCommand);
 
     // Lb - Auto-align to left coral spoke
-    //m_primaryController.leftBumper()
-    //.onTrue(alignLeftCommand);
-
-    // **TEMPORARY** follow nearest apriltag
-    //m_primaryController.x()
-    //.whileTrue(closestAprilTagCommand);
+    m_primaryController.leftBumper()
+    .onTrue(alignLeftCommand);
 
     /*
       new Trigger(limelight::hasTarget)
@@ -107,8 +134,8 @@ public class RobotContainer {
      */
 
     // x - resets gyro
-    //m_primaryController.x()
-    //.onTrue(resetGyroCommand);
+    m_primaryController.x()
+    .onTrue(resetGyroCommand);
 
 
     /* SECONDARY */
@@ -139,38 +166,7 @@ public class RobotContainer {
     // B - Ball command
     m_secondaryController.b()
     .whileTrue(ballCommand);
- 
-    // Y Button - manual raise
-    m_primaryController.y()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, 0.1));
-
-    // X Button - down button
-    m_primaryController.x()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -0.1));
-
-    /* PIVOT CONTROLS */
-    
-    // Left Trigger - manual pivot raise
-    m_primaryController.leftBumper()
-    .whileTrue(MovePivotManualCommand.movePivot(m_intake, .05));
-
-    // Left Trigger - manual pivot raise
-    m_primaryController.rightBumper()
-    .whileTrue(MovePivotManualCommand.movePivot(m_intake, -.05));
-
-    // Right Trigger - manual pivot lower
-    m_primaryController.rightTrigger()
-    .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, .1));
-
-        // left Trigger - manual pivot lower
-        m_primaryController.leftTrigger()
-        .whileTrue(MoveElevatorManualCommand.moveElevator(m_elevator, -.1));
-
-    // Left Bumper - Moves pivot arm to BALL position while held, returns to HOME when released
-    //m_primaryController.leftBumper()
-   // .whileTrue(lb_Command);
-
-  
+    }
 }
 
   /**
