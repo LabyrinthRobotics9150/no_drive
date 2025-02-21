@@ -11,7 +11,7 @@ public class MovePivotManualCommand {
                 if (false /* MAX_POS || MIN_POS */) {
                     end(true);
                 } else {
-                    intake.setPivotSpeed(speed); 
+                    intake.setHeight(intake.getHeight() + .1); 
                 }
             }
 
