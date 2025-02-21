@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 public class ElevatorSubsystem extends SubsystemBase {
     public static final SparkFlex elevatorMotor = new SparkFlex(Constants.OperatorConstants.kElevatorLeaderCanId, MotorType.kBrushless); 
     private final RelativeEncoder elevatorEncoder = elevatorMotor.getEncoder();
-    private final PIDController pidController = new PIDController(0.1, 0, 0);
+    private final PIDController pidController = new PIDController(0.01, 0, 0);
     public static final SparkLimitSwitch forwardLimitSwitch = elevatorMotor.getForwardLimitSwitch();
     public static final SparkLimitSwitch reverseLimitSwitch = elevatorMotor.getReverseLimitSwitch();
 
@@ -26,8 +26,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // (max velocity and acceleration)
     private final TrapezoidProfile.Constraints constraints = new TrapezoidProfile.Constraints(
-        1.0, // (units per second)
-        0.5  // (units per second squared)
+        .50, // (units per second)
+        0.25  // (units per second squared)
     );
 
     public ElevatorSubsystem() {

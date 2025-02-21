@@ -17,7 +17,8 @@ public class MoveElevatorCommand extends Command {
     @Override
     public void initialize() {
         startingHeight = elevator.getHeight(); 
-        elevator.setHeight(targetHeight); 
+        elevator.setHeight(targetHeight);
+        System.out.println("moved to level 1"); 
     }
 
     @Override

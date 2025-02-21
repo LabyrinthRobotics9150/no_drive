@@ -63,7 +63,7 @@ public class RobotContainer {
   
   
     // determines which commands are enabled;
-    boolean TESTING_MODE = true;
+    boolean TESTING_MODE = false;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -133,6 +133,11 @@ public class RobotContainer {
     m_primaryController.x()
     .onTrue(resetGyroCommand);
 
+    // B - Ball command
+    m_primaryController.b()
+    .whileTrue(ballCommand);
+    }
+
 
     /* SECONDARY */
 
@@ -158,11 +163,6 @@ public class RobotContainer {
     // RT - intake in
     m_secondaryController.rightTrigger()
     .whileTrue(wheelMoveCommand);
-
-    // B - Ball command
-    m_secondaryController.b()
-    .whileTrue(ballCommand);
-    }
 }
 
   /**

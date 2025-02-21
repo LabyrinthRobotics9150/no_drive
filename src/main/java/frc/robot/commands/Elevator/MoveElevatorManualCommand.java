@@ -20,7 +20,6 @@ public class MoveElevatorManualCommand {
                 } else {
                     elevator.setElevatorSpeed(speed); 
                 }
-                System.out.println("height: " + elevator.getHeight());
             }
 
             @Override
