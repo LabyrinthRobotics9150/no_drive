@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Elevator.*;
 import frc.robot.commands.Intake.BallCommand;
@@ -44,10 +45,10 @@ public class RobotContainer {
     FollowClosestAprilTagCommand closestAprilTagCommand = new FollowClosestAprilTagCommand(limelight);
 
     // secondary
-    MoveElevatorCommand level4Command = new MoveElevatorCommand(m_elevator, 16); // tune these
-    MoveElevatorCommand level3Command = new MoveElevatorCommand(m_elevator, 9.5);
-    MoveElevatorCommand level2Command = new MoveElevatorCommand(m_elevator, 5.39);
-    MoveElevatorCommand level1Command = new MoveElevatorCommand(m_elevator, 0);
+    Command level4Command = m_elevator.goToHeight(176); // tune these
+    Command level3Command = m_elevator.goToHeight(104.5);
+    Command level2Command = m_elevator.goToHeight(59.29);
+    Command level1Command = m_elevator.goToHeight(0.0);
     WheelMoveCommand wheelMoveCommand = new WheelMoveCommand(m_intake, .1);
     WheelMoveCommand wheelMoveReverseCommand = new WheelMoveCommand(m_intake, -.1);
     BallCommand ballCommand = new BallCommand(m_intake);
@@ -176,4 +177,7 @@ public class RobotContainer {
   }
     */
 
+  public void onDisable() {
+    m_elevator.onDisable();
+  }
 }
